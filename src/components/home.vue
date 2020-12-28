@@ -102,8 +102,8 @@
 
       <!-- 面包屑 -->
       <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a href="/">数据统计</a></el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/dailyPassengerFlow' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>数据统计</el-breadcrumb-item>
       </el-breadcrumb>
 
       <hr>
@@ -115,7 +115,7 @@
     <el-row>
       <el-col>
         <el-menu
-          :default-active="activeIndex"
+          :default-active="left_barActiveIndex"
           class="el-menu-vertical-demo"
           @open="handleOpen"
           @close="handleClose">
@@ -134,9 +134,15 @@
               <router-link to="/vidio">
                 <el-menu-item index="1-3">店内视频客流</el-menu-item>
               </router-link>
-              <el-menu-item index="1-4">展厅热区图</el-menu-item>
-              <el-menu-item index="1-5">展厅重点车型客流</el-menu-item>
-              <el-menu-item index="1-6">品牌互动墙</el-menu-item>
+              <router-link to="/showRoom">
+                <el-menu-item index="1-4">展厅热区图</el-menu-item>
+              </router-link>
+              <router-link to="/keyModel">
+                <el-menu-item index="1-5">展厅重点车型客流</el-menu-item>
+              </router-link>
+              <router-link to="/interactive">
+                <el-menu-item index="1-6">品牌互动墙</el-menu-item>
+              </router-link>
             </el-menu-item-group>
           </el-submenu>
           <el-submenu index="2">
@@ -218,6 +224,7 @@ export default {
   data() {
       return {
         activeIndex: '1-1',
+        left_barActiveIndex: '1-1'
       };
     },
     methods: {
@@ -292,6 +299,7 @@ a{
 /* 面包屑 */
 .breadcrumb{
   margin: 15px 0 15px 0;
+  padding-left: 25px;
 }
 
 /* content内容区域 */
@@ -302,9 +310,11 @@ a{
 .left_bar{
   width: 15%;
   min-width: 200px;
+  min-height: 800px;
 }
 .left_bar .el-menu{
   border-right: 0px;
+  text-align: left;
 }
 
 /* 右部内容区域 */

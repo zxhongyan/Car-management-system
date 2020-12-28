@@ -2,18 +2,12 @@
   <div class="dailyPassengerFlow">
         <!-- 选者查询的店铺和日期 -->
         <div class="selectStoreDate">
+            <!-- 选择经销商 -->
             <strong>选择经销商</strong>
-            <el-row class="demo-autocomplete">
-                <el-col :span="24">
-                    <el-autocomplete
-                    class="inline-input"
-                    v-model="store"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    @select="handleSelect"
-                    ></el-autocomplete>
-                </el-col>
-            </el-row>
+            <div @click="open()">
+                <el-input v-model="store" placeholder="请输入内容"></el-input>
+            </div>
+            <!-- 选择日期 -->
             <strong>选择日期</strong>
             <div class="block">
                 <el-date-picker
@@ -23,6 +17,7 @@
                 </el-date-picker>
             </div>
         </div>
+    <div class="today">
         <!-- 小提示tips  -->
         <div class="tips">
             <strong>当日天气</strong>
@@ -60,7 +55,7 @@
                 </p>
                 </div>
             </div>
-
+    </div>
 
 
             <!-- 今日的客流数据表 -->
@@ -134,6 +129,15 @@
 
         </div>
 
+        <!-- 弹出框 -->
+            <div>
+                <el-dialog title="选择经销商" :visible.sync="dialogTableVisible" left :append-to-body='true' :lock-scroll='false' width="30%">
+                    <div>
+                        <el-input class="inline-input" v-model="store" placeholder="请输入内容"></el-input>
+                        <div class="select" v-for="item in items" :key='item.Store' @click="select(item.Store)">{{item.Store}}</div>
+                    </div>
+                </el-dialog>
+            </div>
 
 
   </div>
@@ -146,37 +150,26 @@ export default {
   name: 'dailyPassengerFlow',
   data () {
     return {
-      restaurants: [],
       store: '',
       date: '',
-
-      
-
+      dialogTableVisible: false,
+      items: [
+          {Store:'北京某某店'},
+          {Store:'天津某某店'},
+          {Store:'重庆某某店'},
+          {Store:'上海某某店'},
+          {Store:'深圳某某店'}
+      ]
     }
   },methods:{
-    querySearch(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      loadAll() {
-        return [
-          { "value": "重庆某某店"},
-          { "value": "北京某某店"},
-          { "value": "万州某某店"},
-          { "value": "上海某某店"},
-          { "value": "广州某某店"},
-          { "value": "深圳某某店"},
-        ];
-      },
-    handleSelect(item) {
-        console.log(item);
+    // 弹出选择经销商
+    open(){
+        this.dialogTableVisible = true;
+    },
+    // 选择想要的经销商店铺
+    select(value){
+        this.store =value;
+        this.dialogTableVisible = false;
     }
   },   
     mounted() {
@@ -197,8 +190,6 @@ export default {
           s.type = 'text/javascript';
           s.src = 'https://apip.weatherdt.com/standard/static/js/weather-standard-common.js?v=2.0';
           document.body.appendChild(s);
-        //   加载店铺名称
-          this.restaurants = this.loadAll();
     },
 }
 </script>
@@ -211,14 +202,23 @@ export default {
         height: 50px;
         padding-left: 10px;
     }
-    .selectStoreDate .el-autocomplete{
-        width: 150px;
-        margin-left: 10px;
-        margin-right: 20px;
+    .selectStoreDate strong{
+        margin: 0 10px;
     }
-    .selectStoreDate .el-input{
-        width: 150px;
-        margin-left: 10px;
+    /* 选择经销商 */
+    .select{
+        height: 20px;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        padding-left: 13px;
+    }
+    .select:hover{
+        background-color: #00ADEF;
+    }
+
+    .today{
+        margin: 10px;
     }
     /* 小提示 */
     .tips{

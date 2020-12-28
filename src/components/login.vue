@@ -45,7 +45,7 @@
         <p class="error" v-show="verifyError">验证码错误</p>
       </div>
       <div>
-          <el-button type="primary" v-on:click="login('/home')">登录</el-button>
+          <el-button type="primary" v-on:click="login('/dailyPassengerFlow')">登录</el-button>
       </div>
     </div>
     </div>

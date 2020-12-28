@@ -2,18 +2,12 @@
   <div class="history">
         <!-- 选者查询的店铺和日期 -->
         <div class="selectStoreDate">
+            <!-- 选择经销商 -->
             <strong>选择经销商</strong>
-            <el-row class="demo-autocomplete">
-                <el-col :span="24">
-                    <el-autocomplete
-                    class="inline-input"
-                    v-model="store"
-                    :fetch-suggestions="querySearch"
-                    placeholder="请输入内容"
-                    @select="handleSelect"
-                    ></el-autocomplete>
-                </el-col>
-            </el-row>
+            <div @click="open()">
+                <el-input v-model="store" placeholder="请输入内容"></el-input>
+            </div>
+            <!-- 选择日期 -->
             <strong>选择日期</strong>
             <div class="block">
                 <el-date-picker
@@ -28,9 +22,6 @@
             </div>
         </div>
 
-        <!-- 分割线 -->
-        <hr />
-
         
 
        
@@ -44,6 +35,7 @@
                 </el-tooltip>    
             </div>
             <hr>
+            <p>历史客流</p>
             <!-- 这里放数据展示图 -->
             <div class="dataImg">
 
@@ -59,12 +51,22 @@
                 </el-tooltip>    
             </div>
             <hr>
+            <p>历史批次</p>
             <!-- 这里放数据展示图 -->
             <div class="dataImg">
 
             </div>
         </div>
 
+        <!-- 弹出框 -->
+            <div>
+                <el-dialog title="选择经销商" :visible.sync="dialogTableVisible" left :append-to-body='true' :lock-scroll='false' width="30%">
+                    <div>
+                        <el-input class="inline-input" v-model="store" placeholder="请输入内容"></el-input>
+                        <div class="select" v-for="item in items" :key='item.Store' @click="select(item.Store)">{{item.Store}}</div>
+                    </div>
+                </el-dialog>
+            </div>
 
 
   </div>
@@ -77,44 +79,60 @@ export default {
   name: 'history',
   data () {
     return {
-      restaurants: [],
       store: '',
-      date: ''
+      date: '',
+      pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        value1: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        value2: '',
+        dialogTableVisible: false,
+        items: [
+            {Store:'北京某某店'},
+            {Store:'天津某某店'},
+            {Store:'重庆某某店'},
+            {Store:'上海某某店'},
+            {Store:'深圳某某店'}
+        ]
+      };    
+    },methods:{
+        // 弹出选择经销商
+        open(){
+            this.dialogTableVisible = true;
+        },
+        // 选择想要的经销商店铺
+        select(value){
+            this.store =value;
+            this.dialogTableVisible = false;
+        }
 
+    }
+  }
       
-
-    }
-  },methods:{
-    querySearch(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      loadAll() {
-        return [
-          { "value": "重庆某某店"},
-          { "value": "北京某某店"},
-          { "value": "万州某某店"},
-          { "value": "上海某某店"},
-          { "value": "广州某某店"},
-          { "value": "深圳某某店"},
-        ];
-      },
-    handleSelect(item) {
-        console.log(item);
-    }
-  },   
-    mounted() {
-        //   加载店铺名称
-          this.restaurants = this.loadAll();
-    },
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -126,16 +144,18 @@ export default {
         padding-left: 10px;
     }
     .selectStoreDate strong{
-        margin-right: 10px;
+        margin:0 10px;
     }
-    .selectStoreDate .el-autocomplete{
-        width: 150px;
-        margin-right: 20px;
+    /* 选择经销商 */
+    .select{
+        height: 20px;
+        display: flex;
+        align-items: center;
+        text-align: left;
+        padding-left: 13px;
     }
-
-    /* 选择时间段 */
-    .block .el-date-picker{
-        width: 200px;
+    .select:hover{
+        background-color: #00ADEF;
     }
 
 

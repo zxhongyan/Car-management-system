@@ -18,4 +18,8 @@ export default {
     left: 0;
     width: 100%;
 }
+*{
+  padding: 0;
+  margin: 0;
+}
 </style>
